@@ -22,7 +22,7 @@ class RestaurantOrderManagement:
         frame = ttk.Frame(root)
         frame.place(relx = 0.5 , rely = 0.5 , anchor = tk.CENTER)
 
-        ttk.label(frame,text = "Restaurant Order Management System", font = ("Helvetica", 16, "bold")).grid(row = 0 , columnspan = 3 , padx = 10 , paddy = 10)
+        ttk.Label(frame,text = "Restaurant Order Management System", font = ("Helvetica", 16, "bold")).grid(row = 0 , columnspan = 3 , padx = 10 , pady = 10)
 
         self.menu_labels = {}
 
@@ -43,8 +43,9 @@ class RestaurantOrderManagement:
 
         currency_dropdown = ttk.Combobox(frame , textvariable = self.currency_var , state = "readonly" , width = 10 , values = ("USD" , "INR"))
 
+        currency_dropdown.grid(row = len(self.menu_items) + 1 , column = 1 , padx = 10 , pady = 5)
         currency_dropdown.current(0)
-        self.currency_var.trace("w" , self.update_prices)
+        self.currency_var.trace_add("write", self.update_menu_prices)
 
         order_button = ttk.Button(frame , text = "Place Order" , command = self.place_order)
 
@@ -57,19 +58,19 @@ class RestaurantOrderManagement:
         canvas = tk.Canvas(root , width = bg_width , height = bg_height)
         canvas.pack()
 
-        orginal_image = tk.PhotoImage(file = "background.png")
+        orginal_image = tk.PhotoImage(file = "image.png")
         background_image = orginal_image.subsample(orginal_image.width() // bg_width , orginal_image.height() // bg_height)
 
         canvas.create_image(0, 0 , anchor = tk.NW , image = background_image)
 
-        def update_menu_prices(self , *args):
-            currency = self.currency_var.get()
-            symbol = "₹" if currency == "INR" else "$"
-            rate = self.exchange_rates if currency == "INR" else 1
+    def update_menu_prices(self, *args):
+        currency = self.currency_var.get()
+        symbol = "₹" if currency == "INR" else "$"
+        rate = self.exchange_rates if currency == "INR" else 1
 
-            for item , price in self.menu_items.items():
-                price = self.menue_items[item] * rate
-                label.config(text = f"{item} ({symbol}{price}):")
+        for item, label in self.menu_labels.items():
+            price = self.menu_items[item] * rate
+            label.config(text = f"{item} ({symbol}{price}):")
 
     def place_order(self):
         total_cost = 0
@@ -105,5 +106,4 @@ if __name__ == "__main__":
     root.mainloop()
 
                     
-
 
